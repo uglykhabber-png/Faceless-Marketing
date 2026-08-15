@@ -8,11 +8,11 @@ _UTM_KEYS = {"utm_source", "utm_medium", "utm_campaign"}
 def _validate_text(value: str, field: str) -> str:
     if not isinstance(value, str):
         raise TypeError(f"{field} must be a string")
+    if any(ord(char) < 32 or ord(char) == 127 for char in value):
+        raise ValueError(f"{field} must not contain control characters")
     value = value.strip()
     if not value:
         raise ValueError(f"{field} must not be empty")
-    if any(ord(char) < 32 or ord(char) == 127 for char in value):
-        raise ValueError(f"{field} must not contain control characters")
     return value
 
 
