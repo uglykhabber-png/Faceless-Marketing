@@ -1,5 +1,5 @@
 import pytest
-from faceless_marketing.core import Campaign, build_utm
+from faceless_marketing.core import Campaign, build_utm, export_campaign
 
 
 def test_utm_build():
@@ -53,3 +53,13 @@ def test_empty_campaign_fields_are_rejected():
 def test_control_characters_are_rejected():
     with pytest.raises(ValueError):
         Campaign("launch\n", "web", "x")
+
+
+def test_export_campaign_is_json_ready():
+    campaign = Campaign("launch", "github", "discoverability")
+    assert export_campaign(campaign) == {
+        "name": "launch",
+        "channel": "github",
+        "objective": "discoverability",
+        "source": "faceless-marketing",
+    }
