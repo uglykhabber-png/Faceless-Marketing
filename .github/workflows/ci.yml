@@ -21,10 +21,15 @@ jobs:
       - run: python -m compileall -q src
       - run: faceless-marketing utm https://example.com --name ci --channel github --objective validation
       - run: faceless-marketing audit . --json > audit.json
+      - run: faceless-marketing audit . --sarif > audit.sarif.json
       - run: python - <<'PY'
 import json
 with open('audit.json', encoding='utf-8') as f:
     data = json.load(f)
 assert 0 <= data['score'] <= 100
 assert isinstance(data['findings'], list)
+with open('audit.sarif.json', encoding='utf-8') as f:
+    sarif = json.load(f)
+assert sarif['version'] == '2.1.0'
+assert sarif['runs'][0]['tool']['driver']['name'] == 'faceless-marketing'
 PY
