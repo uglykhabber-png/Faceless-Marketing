@@ -4,45 +4,42 @@ A local-first, open-source toolkit for ethical, measurable, non-personal-brand m
 
 ## What exists today
 
-v0.1.0 is intentionally small. It currently provides:
+v0.2 adds an evidence-first OSS growth intelligence foundation:
 
-- a typed campaign data model
-- deterministic UTM URL generation
-- safe URL validation
-- replacement of existing UTM source/medium/campaign parameters
-- a CLI for UTM generation
-- JSON-ready campaign export helpers
-- regression and adversarial tests
+- deterministic UTM URL generation with safe URL validation
+- repository audit with scored, evidence-linked findings
+- campaign ledger primitives for deterministic campaign records
+- explicit evidence records with provenance state, UTC timestamps and confidence
+- discoverability-gap analysis grounded in repository content
+- evidence-weighted decision scoring with an `INSUFFICIENT_EVIDENCE` outcome
+- deterministic JSON/CSV/SARIF/Markdown reporting surfaces
+- adversarial and contract tests
 
-The broader campaign-planning features described in the roadmap are **not implemented yet**. This distinction is deliberate: documentation should describe shipped behavior, not planned behavior.
+The project does **not** claim causal lift, ROI, conversions, traffic forecasts, fake engagement, or automated unsolicited outreach from metadata alone.
 
 ## Quick start
 
 ```bash
 python -m pip install -e .
 faceless-marketing utm https://example.com/project --name launch --channel github --objective discoverability
+faceless-marketing audit .
+faceless-marketing discover .
+faceless-marketing report .
 ```
 
-Example output:
+## Architecture
 
-```text
-https://example.com/project?utm_source=faceless-marketing&utm_medium=github&utm_campaign=launch
-```
+`RAW INPUT → VALIDATION → OBSERVATION → EVIDENCE → INTERPRETATION → RECOMMENDATION → ACTION`
+
+See [`docs/LAYERS.md`](docs/LAYERS.md) and [`docs/THREAT_MODEL.md`](docs/THREAT_MODEL.md).
+
+## Security
+
+Do not place secrets, credentials, private campaign data, or personal data in public issues or pull requests. Report vulnerabilities through the repository's private GitHub Security Advisory flow described in [`SECURITY.md`](SECURITY.md).
 
 ## Scope
 
-Faceless Marketing helps a project turn useful engineering work into discoverable, evidence-based marketing assets without fake engagement, fabricated metrics, spam, impersonation, or automated unsolicited outreach.
-
-## Principles
-
-1. No fake engagement.
-2. No fabricated claims or metrics.
-3. No impersonation.
-4. No spam or unsolicited bulk outreach.
-5. Preserve source attribution.
-6. Prefer useful content over promotional noise.
-7. Keep measurement reproducible.
-8. Ship only what the documentation says is implemented.
+Faceless Marketing helps projects turn useful engineering work into discoverable, evidence-based marketing assets without fake engagement, fabricated claims or metrics, spam, impersonation, or automated unsolicited outreach.
 
 ## Development
 
@@ -52,8 +49,8 @@ python -m pytest -q
 python -m compileall -q src
 ```
 
-CI tests Python 3.10 through 3.13.
+CI tests Python 3.10 through 3.13 and validates the human and machine interfaces.
 
 ## Status
 
-**v0.1.0 release candidate.** The project is early-stage and should not be presented as a full marketing automation platform yet.
+**v0.2 development line.** The repository is building toward an OSS Growth Intelligence Platform; shipped functionality remains deliberately narrower than future roadmap items.

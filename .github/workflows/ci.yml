@@ -22,14 +22,29 @@ jobs:
       - run: faceless-marketing utm https://example.com --name ci --channel github --objective validation
       - run: faceless-marketing audit . --json > audit.json
       - run: faceless-marketing audit . --sarif > audit.sarif.json
+      - run: faceless-marketing discover . --json > discover.json
+      - run: faceless-marketing report . --json > report.json
+      - run: faceless-marketing recommend --id ci-docs --title "Documentation" --action "Improve onboarding" --expected-value 10 --evidence 0.8 --reach 1.5 --effort 1 --risk 1 --confidence 0.9 > recommendation.json
       - run: python - <<'PY'
 import json
-with open('audit.json', encoding='utf-8') as f:
-    data = json.load(f)
-assert 0 <= data['score'] <= 100
-assert isinstance(data['findings'], list)
-with open('audit.sarif.json', encoding='utf-8') as f:
-    sarif = json.load(f)
+from pathlib import Path
+
+audit = json.loads(Path('audit.json').read_text(encoding='utf-8'))
+assert audit['schema_version'] == 1
+assert 0 <= audit['score'] <= 100
+assert isinstance(audit['findings'], list)
+
+sarif = json.loads(Path('audit.sarif.json').read_text(encoding='utf-8'))
 assert sarif['version'] == '2.1.0'
 assert sarif['runs'][0]['tool']['driver']['name'] == 'faceless-marketing'
+
+discover = json.loads(Path('discover.json').read_text(encoding='utf-8'))
+assert discover['schema_version'] == 1
+assert isinstance(discover['gaps'], list)
+
+report = json.loads(Path('report.json').read_text(encoding='utf-8'))
+assert report['schema_version'] == 1
+
+recommendation = json.loads(Path('recommendation.json').read_text(encoding='utf-8'))
+assert recommendation['status'] in {'DO_NOW', 'DO_NEXT', 'TEST', 'DEFER', 'INSUFFICIENT_EVIDENCE'}
 PY
